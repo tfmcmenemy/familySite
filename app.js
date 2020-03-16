@@ -21,44 +21,44 @@ app.use(express.static("public"));
 ////////           Database                 ///////
 ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////
-mongoose.connect('mongodb://localhost:27017/quiz', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-mongoose.connect('mongodb://localhost:27017/recipes', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
-
-/////Schema
-const questionSchema = new mongoose.Schema({
-    subject: String,
-    nameForHTML: String,
-    question: String,
-    correctAnswer: String,
-    answer2: String,
-    answer3: String,
-    answer4: String
-})
-
-const ingredientSchema = new mongoose.Schema({
-    amount: Number,
-    measurement: String,
-    ingredient: String
-})
-
-const recipeSchema = new mongoose.Schema({
-    name: String,
-    ingredients: [ingredientSchema],
-    instructions: String,
-    tags: [String],
-    url: String
-})
-
-const Question = mongoose.model("Question", questionSchema)
-const Ingredient = mongoose.model("Ingredient", ingredientSchema)
-const Recipe = mongoose.model("Recipe", recipeSchema)
+// mongoose.connect('mongodb://localhost:27017/quiz', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// });
+// mongoose.connect('mongodb://localhost:27017/recipes', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// });
+//
+//
+// /////Schema
+// const questionSchema = new mongoose.Schema({
+//     subject: String,
+//     nameForHTML: String,
+//     question: String,
+//     correctAnswer: String,
+//     answer2: String,
+//     answer3: String,
+//     answer4: String
+// })
+//
+// const ingredientSchema = new mongoose.Schema({
+//     amount: Number,
+//     measurement: String,
+//     ingredient: String
+// })
+//
+// const recipeSchema = new mongoose.Schema({
+//     name: String,
+//     ingredients: [ingredientSchema],
+//     instructions: String,
+//     tags: [String],
+//     url: String
+// })
+//
+// const Question = mongoose.model("Question", questionSchema)
+// const Ingredient = mongoose.model("Ingredient", ingredientSchema)
+// const Recipe = mongoose.model("Recipe", recipeSchema)
 
 app.get("/", function(req, res) {
     res.render("home")
