@@ -1,0 +1,41 @@
+body {
+    background: #f4f4f4
+}
+.dropdown_options {
+    font-size: 10px;
+    color: red;
+}
+
+.form-group label {
+    width: 100%;
+    margin: 5px;
+    text-align: left;
+}
+
+.mcm-nav {
+    background: #9099a2;
+}
+
+.page-title {
+    margin: 30px;
+}
+
+.submit-button {
+    width: 40%;
+}
+
+.col-6 .form-control {
+    margin: 8px;
+    width: 90%;
+    align-items: center;
+}
+
+#correctAnswer {
+    color: green;
+}
+
+.test-select-button {
+    width: 70%;
+    margin: 15px;
+    align-items: center;
+}

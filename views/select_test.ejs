@@ -1,0 +1,26 @@
+<%- include("header") -%>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-1">
+        <p> </p>
+    </div>
+    <div class="col-lg-6 col-sm-10 text-center">
+        <h1 class="page-title">Select your test</h1>
+        <h4>Below is a list of avaliable subjects, followed by the number of quesitons in each subject.</h4>
+        <form class="" action="/select_test" method="post" name="testSubject">
+            <div class="form-row">
+                <div class="form-group col-12 text-center">
+                    <% for (var subject in subjects){ %>
+                        <button type="submit" name="<%= name[subject] %>" class="test-select-button btn btn-outline-secondary btn-lg"><%= subject %> - (<%= subjects[subject] %>)</button>
+                    <%}%>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+    <div class="col-lg-3 col-sm-1">
+        <p> </p
+    </div>
+</div>
+<%- include("footer") -%>

@@ -1,0 +1,88 @@
+<%- include("header") -%>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-1">
+        <p> </p>
+    </div>
+    <div class="col-lg-6 col-sm-10 text-center">
+        <h1 class="page-title">Add a recipe</h1>
+
+        <form action="/add_recipe" method="post">
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="">Recipe Name</label>
+                    <input class="form-control" type="text" name="name" value="" placeholder="Recipe Name" autocomplete="off">
+                </div>
+                <div class="form-group" id="targetArea">
+                    <label for="Ingredient text-left">Ingredients</label>
+                    <div class="form-row form-group" id="ingredientRow">
+                        <div class="col-2">
+                            <input class="form-control" type="text" name="amount" value="" placeholder=".5" autocomplete="off">
+                        </div>
+                        <div class="col-2">
+                            <select class="form-control" name="measurement" id="exampleFormControlSelect1">
+                                <option selected></option>
+                                <option>Teaspoon</option>
+                                <option>TableSpoon</option>
+                                <option>Cup</option>
+                                <option>Ounce</option>
+                                <option>Pound</option>
+                                <option>Pint</option>
+                                <option>Quart</option>
+                                <option>Fluid Ounce</option>
+                                <option>Lbs.</option>
+
+                            </select>
+                        </div>
+                        <div class="col-7">
+                            <input class="form-control" type="text" name="ingredient" value="" placeholder="Flour">
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-outline-secondary" type="button" name="hideMe" onclick="addIngredient()">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Instructions</label>
+                    <textarea id="validationCustom03" class="form-control" id="exampleFormControlTextarea1" name="instructions" rows="10"></textarea>
+                    <div class="invalid-feedback">
+                        Please provide a valid city.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="">URL:</label>
+                    <input class="form-control col-12" type="text" name="URL" placeholder="Link">
+                </div>
+                <div class="form-group">
+                    <label for="">Tags:</label>
+                    <input class="form-control col-12" type="text" name="tags" placeholder="Tags - seperate each tag by a comma and a space." autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-secondary submit-button" name="button">Enter Recipe</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-3 col-sm-1">
+        <p> </p>
+    </div>
+</div>
+
+<script>
+    function addIngredient() {
+        var rowToCopy = document.getElementById("ingredientRow")
+        var targetArea = document.getElementById("targetArea")
+
+        targetArea.appendChild(rowToCopy.cloneNode(true))
+
+        rowToCopy.getElementsByTagName("button")[0].style.display = "none"
+        rowToCopy.id = "hidden"
+
+        document.getElementById("ingredientRow").getElementsByTagName("input")[0].value = ""
+        document.getElementById("ingredientRow").getElementsByTagName("input")[1].value = ""
+
+
+
+    }
+</script>
+<%- include("footer") -%>
