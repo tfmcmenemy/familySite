@@ -1,10 +1,10 @@
 <%- include("header") -%>
 
 <div class="row">
-    <div class="col-lg-3 col-sm-1">
+    <div class="col-lg-3 col-sm-2">
         <p> </p>
     </div>
-    <div class="col-lg-6 col-sm-10 text-center">
+    <div class="col-lg-6 col-sm-8 text-center mcm-form">
         <h1 class="page-title">Add a recipe</h1>
 
         <form action="/add_recipe" method="post">
@@ -21,17 +21,17 @@
                         </div>
                         <div class="col-2">
                             <select class="form-control" name="measurement" id="exampleFormControlSelect1">
-                                <option selected></option>
+                                <option selected> </option>
                                 <option>Teaspoon</option>
                                 <option>TableSpoon</option>
                                 <option>Cup</option>
                                 <option>Ounce</option>
-                                <option>Pound</option>
+                                <option>Lbs</option>
                                 <option>Pint</option>
                                 <option>Quart</option>
                                 <option>Fluid Ounce</option>
-                                <option>Lbs.</option>
-
+                                <option>Can</option>
+                                <option>Jar</option>
                             </select>
                         </div>
                         <div class="col-7">
@@ -51,7 +51,25 @@
                 </div>
                 <div class="form-group">
                     <label for="">URL:</label>
-                    <input class="form-control col-12" type="text" name="URL" placeholder="Link">
+                    <input class="form-control col-12" type="text" name="URL" placeholder="Link" autocomplete="off">
+                </div>
+                <div class="form-group" id="associatedRecipeRowInsert">
+                    <label>Associated Recipes:</label>
+                    <div class="form-row form-group" id="associatedRecipeRow">
+                        <div class="col-9">
+                            <select class="form-control" name="associatedRecipes">
+                                <option value="">None</option>
+                                <% allRecipes.forEach(function(recipe){ %>
+                                <option value="<%= recipe._id %>"><%=recipe.name%></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-outline-secondary" type="button" name="hideMe" onclick="addAssociatedRecipe()">+</button>
+                        </div>
+                        <div class="col-2">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="">Tags:</label>
@@ -60,15 +78,15 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-outline-secondary submit-button" name="button">Enter Recipe</button>
                 </div>
-            </div>
         </form>
     </div>
-    <div class="col-lg-3 col-sm-1">
+    <div class="col-lg-3 col-sm-2">
         <p> </p>
     </div>
 </div>
 
 <script>
+
     function addIngredient() {
         var rowToCopy = document.getElementById("ingredientRow")
         var targetArea = document.getElementById("targetArea")
@@ -79,10 +97,23 @@
         rowToCopy.id = "hidden"
 
         document.getElementById("ingredientRow").getElementsByTagName("input")[0].value = ""
+        document.getElementById("ingredientRow").getElementsByTagName("input")[0].select()
         document.getElementById("ingredientRow").getElementsByTagName("input")[1].value = ""
-
-
-
     }
+
+    function addAssociatedRecipe() {
+        var rowToCopy = document.getElementById("associatedRecipeRow")
+        var targetArea = document.getElementById("associatedRecipeRowInsert")
+
+        targetArea.appendChild(rowToCopy.cloneNode(true))
+
+        rowToCopy.getElementsByTagName("button")[0].style.display = "none"
+        rowToCopy.id = "hidden"
+
+        document.getElementById("associatedRecipeRow").getElementsByTagName("input")[0].value = ""
+    }
+
+
 </script>
+
 <%- include("footer") -%>

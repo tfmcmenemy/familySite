@@ -1,0 +1,28 @@
+<%- include("header") -%>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-1">
+        <p> </p>
+    </div>
+    <div class="col-lg-6 col-sm-10 text-center mcm-form">
+        <h1 class="page-title"> <%= recipe.name %> </h1>
+
+<div class="ingredientsAndInstructions text-left">
+
+    <h3 class="recipeSection">Ingredients:</h3>
+    <% recipe.ingredients.forEach(function(selectedIngredient){ %>
+    <p> <%= selectedIngredient.amount %> <%= selectedIngredient.measurement %> <%= selectedIngredient.name %> </p>
+    <% }) %>
+
+<h3 class="recipeSection">Instructions:</h3>
+    <% recipe.instructions.forEach(function(instruciton){%>
+    <p> <%= instruciton %> </p>
+    <% }) %>
+</div>
+    </div>
+    <div class="col-lg-3 col-sm-1 text-center">
+
+    </div>
+</div>
+
+<%- include("footer") -%>

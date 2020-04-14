@@ -1,5 +1,6 @@
 body {
-    background: #f4f4f4
+    background: #f4f4f4;
+    font-family: 'Montserrat', sans-serif;
 }
 .dropdown_options {
     font-size: 10px;
@@ -38,4 +39,40 @@ body {
     width: 70%;
     margin: 15px;
     align-items: center;
+}
+
+.recipe-select-button {
+    width: 60%;
+    margin: 15px;
+    align-items: center;
+}
+.recipe-add-items {
+    float: left;
+}
+
+.mcm-form {
+    margin: 10px;
+}
+
+.recipe-select-button {
+    width: 80%;
+    margin: 15px;
+    align-items: center;
+    height: 10vh;
+    font-size: 15px;
+}
+
+.ingredientsAndInstructions {
+    margin: 40px;
+    font-size: 15px;
+}
+
+.recipeSection {
+    margin-top: 40px;
+}
+
+.recipeSearchBars {
+    margin: 10px;
+    height: 4vh;
+    font-size: 15px;
 }

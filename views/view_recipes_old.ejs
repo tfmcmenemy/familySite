@@ -1,0 +1,35 @@
+<%- include("header") -%>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-1">
+        <p> </p>
+    </div>
+    <div class="col-lg-6 col-sm-10 text-center mcm-form">
+        <h1 class="page-title">Select your recipe</h1>
+        <form class="" action="/select_recipe" method="post" name="recipeSelection">
+            <% for (var i = 0; i < recipes.length; i +=2 ){ %>
+            <div class="form-row form-group text-center">
+                <div class="col-6">
+                    <button type="submit" name="selectedRecipe" value="<%= recipes[i]._id %>" class="recipe-select-button btn btn-outline-secondary btn-lg"><%=recipes[i].name%></button>
+                </div>
+                <% if ((recipes.length-1) != i){%>
+                <div class="col-6">
+                    <button type="submit" name="selectedRecipe" value="<%= recipes[i+1]._id %>" class="recipe-select-button btn btn-outline-secondary btn-lg"><%=recipes[i+1].name%></button>
+                </div>
+                <%}%>
+            </div>
+            <% } %>
+
+                <% if (recipes.lengh%2 > 0) { %>
+                <div class="form-row form-group text-center">
+                    <div class="col-6">
+                        <button type="submit" name="<%= recipes[recipes.length-1]._id %>" class="recipe-select-button btn btn-outline-secondary btn-lg"><%=recipes[recipes.length-1].name%></button>
+                    </div>
+                </div>
+                <%} %>
+
+        </form>
+    </div>
+</div>
+
+<%- include("footer") -%>

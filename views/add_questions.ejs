@@ -4,7 +4,8 @@
     <div class="col-lg-3 col-sm-1">
         <p> </p>
     </div>
-    <div class="col-lg-6 col-sm-10 text-center">
+    <div class="col-lg-6 col-sm-10 text-center  mcm-form">
+
         <h1 class="page-title">Add a Question</h1>
 
         <form action="/add_questions" method="post">
@@ -16,7 +17,7 @@
                     <div class="col-4">
                         <select class="form-control" name="subjectDropdown">
                             <% subjects.forEach(function(subject){ %>
-                                <option><%= subject %></option>
+                            <option><%= subject %></option>
                             <%})%>
                         </select>
                     </div>

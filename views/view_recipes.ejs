@@ -1,0 +1,51 @@
+<%- include("header") -%>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2 col-sm-1">
+            <p> </p>
+        </div>
+        <div class="col-lg-8 col-sm-10 text-center mcm-form">
+            <h1 class="page-title">Select your recipe</h1>
+            <form class="" action="/select_recipe" method="post" name="recipeSelection">
+                <div class="form-group">
+                    <div class="row d-flex justify-content-center">
+                        <input class="form-control col-5 recipeSearchBars" list="browsers" name="recipeList" id="recipeList" onkeyup="searchbarChange()" placeholder="Search for a recipe">
+                    </div>
+
+                </div>
+
+
+                <div class="container">
+                    <div class="row">
+                        <% recipes.forEach(function(recipe){ %>
+                        <div class="col-lg-4 col-sm-6" id="<%=recipe.name%>" name="buttonHouse">
+                            <button type="submit" name="selectedRecipe" value="<%= recipe._id %>" class="recipe-select-button btn btn-outline-secondary btn-lg"><%=recipe.name%></button>
+                        </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function searchbarChange() {
+        let button
+        let buttonText
+        let searchValue = document.getElementById('recipeList').value.toLowerCase()
+
+        for (var i= 0; i < document.getElementsByTagName("button").length -1; i ++) {
+            button = document.getElementsByName("buttonHouse")[i]
+            buttonText = button.innerText.toLowerCase()
+
+                if (buttonText.includes(searchValue)) {
+                    button.hidden = false
+                } else {
+                    button.hidden = true
+                }
+        }
+    }
+</script>
+<%- include("footer") -%>

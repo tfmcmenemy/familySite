@@ -21,51 +21,59 @@ app.use(express.static("public"));
 ////////           Database                 ///////
 ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////
-// mongoose.connect('mongodb://localhost:27017/quiz', {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// });
-// mongoose.connect('mongodb://localhost:27017/recipes', {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// });
-//
-//
-// /////Schema
-// const questionSchema = new mongoose.Schema({
-//     subject: String,
-//     nameForHTML: String,
-//     question: String,
-//     correctAnswer: String,
-//     answer2: String,
-//     answer3: String,
-//     answer4: String
-// })
-//
-// const ingredientSchema = new mongoose.Schema({
-//     amount: Number,
-//     measurement: String,
-//     ingredient: String
-// })
-//
-// const recipeSchema = new mongoose.Schema({
-//     name: String,
-//     ingredients: [ingredientSchema],
-//     instructions: String,
-//     tags: [String],
-//     url: String
-// })
-//
-// const Question = mongoose.model("Question", questionSchema)
-// const Ingredient = mongoose.model("Ingredient", ingredientSchema)
-// const Recipe = mongoose.model("Recipe", recipeSchema)
+mongoose.connect('mongodb://localhost:27017/quiz', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+mongoose.connect('mongodb://localhost:27017/recipes', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+
+/////Schema
+const questionSchema = new mongoose.Schema({
+    subject: String,
+    nameForHTML: String,
+    question: String,
+    correctAnswer: String,
+    answer2: String,
+    answer3: String,
+    answer4: String
+})
+
+const recipeSchema = new mongoose.Schema({
+    name: String,
+    ingredients: [{
+        amount: String,
+        measurement: String,
+        name: String
+    }],
+    instructions: [String],
+    tags: [String],
+    url: String,
+    associatedRecipes: [String],
+    file: {fileName: String, contents: String}
+})
+
+const Question = mongoose.model("Question", questionSchema)
+const Recipe = mongoose.model("Recipe", recipeSchema)
 
 app.get("/", function(req, res) {
+    console.log('Someone connected to the server');
     res.render("home")
 })
 
 app.get("/add_recipe", function(req, res) {
-    res.render("add_recipe")
+    Recipe.find({}, null, {
+        sort: {
+            name: 1
+        }
+    }, function(err, allRecipes) {
+        res.render("add_recipe", {
+            allRecipes: allRecipes
+        })
+    })
 })
 
 app.get("/add_questions", function(req, res) {
@@ -83,6 +91,21 @@ app.get("/add_questions", function(req, res) {
             subjects: subjects
         })
     })
+})
+
+app.get("/selected_recipe/:recipeID", function(req, res) {
+    recipeID = req.params.recipeID
+
+        Recipe.findOne({
+            _id: recipeID
+        }, function(err, recipeResult) {
+            if (!err) {
+                console.log(recipeResult)
+                res.render("view_selected_recipe", {
+                    recipe: recipeResult
+                })
+            }
+        })
 })
 
 app.get("/select_test", function(req, res) {
@@ -116,6 +139,41 @@ app.get("/select_test", function(req, res) {
             res.render("select_test", {
                 subjects: sortedSubjects,
                 name: names
+            })
+        }
+    })
+})
+
+app.get("/view_recipes", function(req, res) {
+    var alphabeticalOrder = []
+    var recipes = []
+
+    Recipe.find({}, null, {
+        sort: {
+            name: 1
+        }
+    }, function(err, allRecipes) {
+        allRecipes.forEach(function(x) {
+            alphabeticalOrder.push(x.name)
+        })
+
+        console.log(allRecipes.length);
+
+        res.render("view_recipes", {
+            recipes: allRecipes
+        })
+    })
+})
+
+app.get('/view_selected_recipe', function(req, res) {
+
+    Recipe.findOne({
+        _id: "5e906b576e5eea340f6a6df6"
+    }, function(err, recipeResult) {
+        if (!err) {
+            console.log(recipeResult)
+            res.render("view_selected_recipe", {
+                recipe: recipeResult
             })
         }
     })
@@ -167,34 +225,56 @@ app.post("/select_test", function(req, res) {
 
 app.post("/add_recipe", function(req, res) {
     const ingredients = []
+    let ingredient
     const tags = []
+    const associatedRecipes = _.split(req.body.associatedRecipes, ",")
+    const amounts = _.split(req.body.amount, ",")
+    const measurements = _.split(req.body.measurement, ",")
+    const recipeIngredients = _.split(req.body.ingredient, ",")
+    const instructions = _.split(req.body.instructions, "\r\n")
 
-    console.log(req.body);
+    // console.log(req.body);
+    console.log(instructions);
 
-    for (var i = 0; i < req.body.amount.length; i++) {
-        const ingredient = new Ingredient({
-            amount: req.body.amount[i],
-            measurement: req.body.measurement[i],
-            ingredient: _.lowerCase(req.body.ingredient[i])
-        })
-        ingredient.save()
+    // below will add the ingredients to an array
+    for (var i = 0; i < amounts.length; i++) {
+        ingredient = {
+            amount: amounts[i],
+            measurement: measurements[i],
+            name: _.capitalize(recipeIngredients[i])
+        }
         ingredients.push(ingredient)
     }
 
-    _.split(req.body.tags,", ").forEach(function(x){
-        tags.push(_.lowerCase(x))
+    // below will take all of the tags from the recipe it will break up the String
+    // that is returned, and the save them to the tags array.
+    _.split(req.body.tags, ", ").forEach(function(x) {
+        tags.push(_.capitalize(x))
     })
 
     const recipe = new Recipe({
-        name: req.body.name,
+        name: _.capitalize(req.body.name),
         ingredients: ingredients,
-        instructions: req.body.instructions,
+        instructions: instructions,
         tags: tags,
-        url: req.body.URL
+        url: req.body.URL,
+        associatedRecipes: associatedRecipes
     })
 
     recipe.save()
+
+    res.redirect("/add_recipe")
+
 })
+
+app.post("/select_recipe", function(req, res) {
+    // console.log(req.body.selectedRecipe);
+    console.log(req.body);
+
+    res.redirect("/selected_recipe/" + req.body.selectedRecipe)
+})
+
+
 
 app.listen(process.env.PORT || 3000, function() {
     console.log("Running on post 3000");
