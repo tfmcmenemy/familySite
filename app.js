@@ -21,11 +21,12 @@ app.use(express.static("public"));
 ////////           Database                 ///////
 ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////
-mongoose.connect('mongodb://localhost:27017/quiz', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-mongoose.connect('mongodb://localhost:27017/recipes', {
+// mongoose.connect('mongodb://localhost:27017/quiz', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// });
+
+mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemy-family', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
