@@ -26,7 +26,8 @@ app.use(express.static("public"));
 //     useUnifiedTopology: true
 // });
 
-mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemy-family', {
+// mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemy-family', {
+    mongoose.connect('mongodb://localhost:27017/recipes', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });

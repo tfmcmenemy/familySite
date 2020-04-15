@@ -7,15 +7,16 @@
         </div>
         <div class="col-lg-8 col-sm-10 text-center mcm-form">
             <h1 class="page-title">Select your recipe</h1>
-            <form class="" action="/select_recipe" method="post" name="recipeSelection">
+            <form class="" id="searchForm">
                 <div class="form-group">
                     <div class="row d-flex justify-content-center">
-                        <input class="form-control col-5 recipeSearchBars" list="browsers" name="recipeList" id="recipeList" onkeyup="searchbarChange()" placeholder="Search for a recipe">
+                        <input class="form-control col-6 recipeSearchBars" list="browsers" name="recipeList" id="recipeList" onkeyup="searchbarChange()" placeholder="Search for a recipe" autocomplete="off" on>
                     </div>
-
                 </div>
+            </form>
 
 
+            <form class="" action="/select_recipe" method="post" name="recipeSelection">
                 <div class="container">
                     <div class="row">
                         <% recipes.forEach(function(recipe){ %>
@@ -36,16 +37,21 @@
         let buttonText
         let searchValue = document.getElementById('recipeList').value.toLowerCase()
 
-        for (var i= 0; i < document.getElementsByTagName("button").length -1; i ++) {
+        for (var i = 0; i < document.getElementsByTagName("button").length - 1; i++) {
             button = document.getElementsByName("buttonHouse")[i]
             buttonText = button.innerText.toLowerCase()
 
-                if (buttonText.includes(searchValue)) {
-                    button.hidden = false
-                } else {
-                    button.hidden = true
-                }
+            if (buttonText.includes(searchValue)) {
+                button.hidden = false
+            } else {
+                button.hidden = true
+            }
         }
     }
+
+    document.getElementById("searchForm").addEventListener('submit', function(e) {
+        e.preventDefault()
+    });
+
 </script>
 <%- include("footer") -%>
