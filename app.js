@@ -26,8 +26,8 @@ app.use(express.static("public"));
 //     useUnifiedTopology: true
 // });
 
-mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemy-family', {
-    // mongoose.connect('mongodb://localhost:27017/recipes', {
+// mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemy-family', {
+mongoose.connect('mongodb://localhost:27017/recipes', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -55,7 +55,11 @@ const recipeSchema = new mongoose.Schema({
     tags: [String],
     url: String,
     associatedRecipes: [String],
-    file: {fileName: String, contents: String}
+    author: String,
+    file: {
+        fileName: String,
+        contents: String
+    }
 })
 
 const Question = mongoose.model("Question", questionSchema)
@@ -97,17 +101,30 @@ app.get("/add_questions", function(req, res) {
 
 app.get("/selected_recipe/:recipeID", function(req, res) {
     recipeID = req.params.recipeID
+    // let assRecipes =[]
+    // let toAdd
+    Recipe.findOne({
+        _id: recipeID
+    }, function(err, recipeResult) {
+        if (!err) {
 
-        Recipe.findOne({
-            _id: recipeID
-        }, function(err, recipeResult) {
-            if (!err) {
-                console.log(recipeResult)
-                res.render("view_selected_recipe", {
-                    recipe: recipeResult
-                })
-            }
-        })
+            // recipeResult.associatedRecipes.forEach(function(recipeID){
+            //     Recipe.findOne({_id : recipeID },function (err,discoveredRecipe){
+            //         toAdd = {
+            //             name: discoveredRecipe.name,
+            //             id: recipeID
+            //         }
+            //         assRecipes.push(toAdd)
+            //     })
+            // })
+            //
+            // console.log(assRecipes);
+
+            res.render("view_selected_recipe", {
+                recipe: recipeResult
+            })
+        }
+    })
 })
 
 app.get("/select_test", function(req, res) {
@@ -149,7 +166,7 @@ app.get("/select_test", function(req, res) {
 app.get("/view_recipes", function(req, res) {
     var alphabeticalOrder = []
     var recipes = []
-
+    let authors = []
     Recipe.find({}, null, {
         sort: {
             name: 1
@@ -159,10 +176,15 @@ app.get("/view_recipes", function(req, res) {
             alphabeticalOrder.push(x.name)
         })
 
-        console.log(allRecipes.length);
-
+        allRecipes.forEach(function(recipe) {
+            if (!authors.includes(recipe.author)) {
+                authors.push(recipe.author)
+            }
+        })
+        console.log(authors.length);
         res.render("view_recipes", {
-            recipes: allRecipes
+            recipes: allRecipes,
+            authors: authors
         })
     })
 })
@@ -226,27 +248,59 @@ app.post("/select_test", function(req, res) {
 })
 
 app.post("/add_recipe", function(req, res) {
-    const ingredients = []
+    const ingredientsPulled = _.split(req.body.ingredients, "\r\n")
     let ingredient
+    const ingredients = []
     const tags = []
     const associatedRecipes = _.split(req.body.associatedRecipes, ",")
-    const amounts = _.split(req.body.amount, ",")
-    const measurements = _.split(req.body.measurement, ",")
-    const recipeIngredients = _.split(req.body.ingredient, ",")
     const instructions = _.split(req.body.instructions, "\r\n")
+    let x
+    let errorIngredient = false
 
+    // Below is my failed attempt at adding in an array of associated recipes
+    // let inputAssociateRecipe
+    // let associatedRecipes = []
+    //
     // console.log(req.body);
-    console.log(instructions);
+    // req.body.associatedRecipes.forEach(function(recipeID){
+    //     Recipe.findOne({_id: recipeID}, function(err,foundAssociatedRecipe){
+    //         inputAssociateRecipe= {
+    //             name: foundAssociatedRecipe.name,
+    //             id: recipeID
+    //         }
+    //         associatedRecipes.push(inputAssociateRecipe)
+    //     })
+    // })
 
     // below will add the ingredients to an array
-    for (var i = 0; i < amounts.length; i++) {
-        ingredient = {
-            amount: amounts[i],
-            measurement: measurements[i],
-            name: _.capitalize(recipeIngredients[i])
+    ingredientsPulled.forEach(function(ingredient) {
+        errorIngredient = false
+        x = ingredient.match(/([\d\/\s]+)?\s?([\w]+)\s([\w\W\s]+)?/)
+
+        if (x == null) {
+        } else {
+            for (var i = 1; i < 4; i++) {
+                if (x[i] == undefined) {
+                    errorIngredient = true
+                }
+            }
+            if (errorIngredient == false) {
+                ingredient = {
+                    amount: x[1],
+                    measurement: x[2],
+                    name: x[3]
+                }
+            } else {
+                ingredient = {
+                    amount: "",
+                    measurement: "",
+                    name: ingredient
+                }
+            }
+            ingredients.push(ingredient)
         }
-        ingredients.push(ingredient)
-    }
+
+    })
 
     // below will take all of the tags from the recipe it will break up the String
     // that is returned, and the save them to the tags array.
@@ -255,18 +309,18 @@ app.post("/add_recipe", function(req, res) {
     })
 
     const recipe = new Recipe({
-        name: _.capitalize(req.body.name),
+        name: req.body.name,
         ingredients: ingredients,
         instructions: instructions,
         tags: tags,
         url: req.body.URL,
-        associatedRecipes: associatedRecipes
+        associatedRecipes: associatedRecipes,
+        author: _.capitalize(req.body.author)
     })
 
     recipe.save()
 
     res.redirect("/add_recipe")
-
 })
 
 app.post("/select_recipe", function(req, res) {
@@ -275,7 +329,6 @@ app.post("/select_recipe", function(req, res) {
 
     res.redirect("/selected_recipe/" + req.body.selectedRecipe)
 })
-
 
 
 app.listen(process.env.PORT || 3000, function() {

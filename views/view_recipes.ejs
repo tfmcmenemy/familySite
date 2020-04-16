@@ -8,12 +8,28 @@
         <div class="col-lg-8 col-sm-10 text-center mcm-form">
             <h1 class="page-title">Select your recipe</h1>
             <form class="" id="searchForm">
-                <div class="form-group">
+                <div class="form-group container">
                     <div class="row d-flex justify-content-center">
                         <input class="form-control col-6 recipeSearchBars" list="browsers" name="recipeList" id="recipeList" onkeyup="searchbarChange()" placeholder="Search for a recipe" autocomplete="off" on>
+
+                    </div>
+                    <div class="row text-center">
+                        <h6 class="col-12 formOR">or</h6>
+                    </div>
+
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filter by Author
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <% authors.forEach(function(author){ %>
+                            <author class="dropdown-item" onclick="authorSearch('<%= author %>')"><%= author %></author>
+                        <% }) %>
                     </div>
                 </div>
             </form>
+
 
 
             <form class="" action="/select_recipe" method="post" name="recipeSelection">
@@ -21,7 +37,7 @@
                     <div class="row">
                         <% recipes.forEach(function(recipe){ %>
                         <div class="col-lg-4 col-sm-6" id="<%=recipe.name%>" name="buttonHouse">
-                            <button type="submit" name="selectedRecipe" value="<%= recipe._id %>" class="recipe-select-button btn btn-outline-secondary btn-lg"><%=recipe.name%></button>
+                            <button type="submit" data-author="<%= recipe.author %>" name="selectedRecipe" value="<%= recipe._id %>" class="recipe-select-button btn btn-outline-secondary btn-lg"><%=recipe.name%></button>
                         </div>
                         <% }) %>
                     </div>
@@ -49,9 +65,24 @@
         }
     }
 
+    function authorSearch(author) {
+        let button
+        let buttonText
+
+        for (var i = 0; i < document.getElementsByName("buttonHouse").length;  i++) {
+            button = document.getElementsByName("buttonHouse")[i]
+            buttonAuthor = button.children[0].dataset.author
+
+            if (author == buttonAuthor) {
+                button.hidden = false
+            } else {
+                button.hidden = true
+            }
+        }
+    }
+
     document.getElementById("searchForm").addEventListener('submit', function(e) {
         e.preventDefault()
     });
-
 </script>
 <%- include("footer") -%>

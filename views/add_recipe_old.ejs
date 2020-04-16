@@ -13,13 +13,38 @@
                     <label for="">Recipe Name</label>
                     <input class="form-control" type="text" name="name" value="" placeholder="Recipe Name" autocomplete="off">
                 </div>
-                <div class="form-group">
-                    <label>Ingredients</label>
-                    <textarea id="validationCustom03" class="form-control" name="ingredients" rows="10"></textarea>
+                <div class="form-group" id="targetArea">
+                    <label for="Ingredient text-left">Ingredients</label>
+                    <div class="form-row form-group" id="ingredientRow">
+                        <div class="col-2">
+                            <input class="form-control" type="text" name="amount" value="" placeholder=".5" autocomplete="off">
+                        </div>
+                        <div class="col-2">
+                            <select class="form-control" name="measurement" id="exampleFormControlSelect1">
+                                <option selected> </option>
+                                <option>Teaspoon</option>
+                                <option>TableSpoon</option>
+                                <option>Cup</option>
+                                <option>Ounce</option>
+                                <option>Lbs</option>
+                                <option>Pint</option>
+                                <option>Quart</option>
+                                <option>Fluid Ounce</option>
+                                <option>Can</option>
+                                <option>Jar</option>
+                            </select>
+                        </div>
+                        <div class="col-7">
+                            <input class="form-control" type="text" name="ingredient" value="" placeholder="Flour">
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-outline-secondary" type="button" name="hideMe" onclick="addIngredient()">+</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Instructions</label>
-                    <textarea id="validationCustom03" class="form-control" name="instructions" rows="10"></textarea>
+                    <label for="exampleFormControlTextarea1">Instructions</label>
+                    <textarea id="validationCustom03" class="form-control" id="exampleFormControlTextarea1" name="instructions" rows="10"></textarea>
                     <div class="invalid-feedback">
                         Please provide a valid city.
                     </div>
@@ -51,11 +76,7 @@
                     <input class="form-control col-12" type="text" name="tags" placeholder="Tags - seperate each tag by a comma and a space." autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label for="">Author:</label>
-                    <input class="form-control col-12" type="text" name="author" placeholder="Author" autocomplete="off" value="becca">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-outline-secondary submit-button" name="button" >Enter Recipe</button>
+                    <button type="submit" class="btn btn-outline-secondary submit-button" name="button">Enter Recipe</button>
                 </div>
         </form>
     </div>
