@@ -1,10 +1,10 @@
 Title: Southern Pecan Pound Cake
-Description:
-Source:
-Original URL:
-Yield:
-Active:
-Total:
+Description: 
+Source: 
+Original URL: 
+Yield: 
+Active: 
+Total: 
 Image: https://cdn2.pepperplate.com/recipes/832932629bdf4493a48f5815c2ea68b5.jpg
 Ingredients:
 	1 cup chopped pecans
@@ -16,6 +16,7 @@ Ingredients:
 	5 large Eggland's Best eggs
 	2 tsp. vanilla extract
 	1/2 cup sour cream
+	topping:
 	1/4 cup chopped pecans
 	1 tbsp. sugar
 
@@ -31,3 +32,4 @@ Instructions:
 	Top batter with 1/4 cup chopped pecans and sprinkle with 1 tbsp. sugar.
 	Bake for about 55-65 minutes (until an inserted toothpick comes out clean.) Allow to cool for an hour, then turn out onto a serving dish.
 	www.thecountrycook.net
+

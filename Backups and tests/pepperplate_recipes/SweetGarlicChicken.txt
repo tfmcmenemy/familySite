@@ -1,16 +1,17 @@
 Title: Sweet Garlic Chicken
-Description:
-Source:
-Original URL:
-Yield:
-Active:
-Total:
+Description: 
+Source: 
+Original URL: 
+Yield: 
+Active: 
+Total: 
 Image: https://cdn2.pepperplate.com/recipes/14699979db46471e9f6fcd98e4a44d6c.jpg
 Ingredients:
 	4 boneless skinless chicken breasts
 	4 garlic cloves, minced
 	4 tablespoons brown sugar
 	1 tablespoon olive oil
+	additional herbs and spices, as desired
 
 Instructions:
 	1 - Preheat oven to 450°F Line a baking dish or cookie sheet with aluminum foil and lightly coat with cooking spray or lightly brush with oil.
@@ -20,3 +21,4 @@ Instructions:
 	5 - Add salt and pepper to taste.
 	6 - Bake uncovered for 15-30 minutes, or until juices run clear. Cooking time will depend on the size and thickness of your chicken.
 	Read more at http://myfridgefood.com/recipes/entree-chicken/sweet-garlic-chicken/#TykgZg1KAsIhQGwM.99
+

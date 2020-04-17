@@ -26,7 +26,7 @@ app.use(express.static("public"));
 //     useUnifiedTopology: true
 // });
 
-mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemy-family', {
+mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemyFamily', {
 // mongoose.connect('mongodb://localhost:27017/recipes', {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -46,20 +46,13 @@ const questionSchema = new mongoose.Schema({
 
 const recipeSchema = new mongoose.Schema({
     name: String,
-    ingredients: [{
-        amount: String,
-        measurement: String,
-        name: String
-    }],
+    ingredients: [String],
     instructions: [String],
     tags: [String],
     url: String,
     associatedRecipes: [String],
     author: String,
-    file: {
-        fileName: String,
-        contents: String
-    }
+    file: String
 })
 
 const Question = mongoose.model("Question", questionSchema)
@@ -257,50 +250,36 @@ app.post("/add_recipe", function(req, res) {
     let x
     let errorIngredient = false
 
-    // Below is my failed attempt at adding in an array of associated recipes
-    // let inputAssociateRecipe
-    // let associatedRecipes = []
-    //
-    // console.log(req.body);
-    // req.body.associatedRecipes.forEach(function(recipeID){
-    //     Recipe.findOne({_id: recipeID}, function(err,foundAssociatedRecipe){
-    //         inputAssociateRecipe= {
-    //             name: foundAssociatedRecipe.name,
-    //             id: recipeID
-    //         }
-    //         associatedRecipes.push(inputAssociateRecipe)
-    //     })
-    // })
 
     // below will add the ingredients to an array
-    ingredientsPulled.forEach(function(ingredient) {
-        errorIngredient = false
-        x = ingredient.match(/([\d\/\s]+)?\s?([\w]+)\s([\w\W\s]+)?/)
-
-        if (x == null) {
-        } else {
-            for (var i = 1; i < 4; i++) {
-                if (x[i] == undefined) {
-                    errorIngredient = true
-                }
-            }
-            if (errorIngredient == false) {
-                ingredient = {
-                    amount: x[1],
-                    measurement: x[2],
-                    name: x[3]
-                }
-            } else {
-                ingredient = {
-                    amount: "",
-                    measurement: "",
-                    name: ingredient
-                }
-            }
-            ingredients.push(ingredient)
-        }
-
-    })
+    // ingredientsPulled.forEach(function(ingredient) {
+    //     errorIngredient = false
+    //     x = ingredient.match(/([\d\/\s]+)?\s?([\w]+)\s([\w\W\s]+)?/)
+    //
+    //     if (x == null) {
+    //     } else {
+    //         for (var i = 1; i < 4; i++) {
+    //             if (x[i] == undefined) {
+    //                 errorIngredient = true
+    //             }
+    //         }
+    //         if (errorIngredient == false) {
+    //             ingredient = {
+    //                 amount: x[1],
+    //                 measurement: x[2],
+    //                 name: x[3]
+    //             }
+    //         } else {
+    //             ingredient = {
+    //                 amount: "",
+    //                 measurement: "",
+    //                 name: ingredient
+    //             }
+    //         }
+    //         ingredients.push(ingredient)
+    //     }
+    //
+    // })
 
     // below will take all of the tags from the recipe it will break up the String
     // that is returned, and the save them to the tags array.
@@ -310,7 +289,7 @@ app.post("/add_recipe", function(req, res) {
 
     const recipe = new Recipe({
         name: req.body.name,
-        ingredients: ingredients,
+        ingredients: ingredientsPulled,
         instructions: instructions,
         tags: tags,
         url: req.body.URL,

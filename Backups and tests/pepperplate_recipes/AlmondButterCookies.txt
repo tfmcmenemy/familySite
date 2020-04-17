@@ -1,10 +1,10 @@
 Title: Almond Butter Cookies
-Description:
-Source:
-Original URL:
-Yield:
-Active:
-Total:
+Description: 
+Source: 
+Original URL: 
+Yield: 
+Active: 
+Total: 
 Categories: cookies
 Image: https://cdn2.pepperplate.com/recipes/68d302c0653e495cb58a16f178340938.jpg
 Ingredients:
@@ -24,3 +24,4 @@ Instructions:
 	Roll dough out with rolling pin and cut with cookie cutter
 	Arrange on ungreased cookie sheet. Bake 18 - 20 minutes or until faintly brown
 	When cookies are completely cool, dust tops with confectioners sugar
+

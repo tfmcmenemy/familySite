@@ -8,7 +8,7 @@ Active:
 Total: 
 Image: https://cdn2.pepperplate.com/recipes/0d329df243274218bdaae5c72f47ad5c.jpg
 Ingredients:
-	1 Box Betty Crocker Carrot Cake Mix
+	One Box Betty Crocker Carrot Cake Mix
 	2/3 cup apple sauce
 	1 cup water
 	3 eggs
