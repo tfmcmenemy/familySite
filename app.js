@@ -32,7 +32,6 @@ mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0
     useUnifiedTopology: true
 });
 
-
 /////Schema
 const questionSchema = new mongoose.Schema({
     subject: String,
@@ -50,9 +49,9 @@ const recipeSchema = new mongoose.Schema({
     instructions: [String],
     tags: [String],
     url: String,
-    associatedRecipes: [String],
     author: String,
-    file: String
+    file: String,
+    deleted: Boolean
 })
 
 const Question = mongoose.model("Question", questionSchema)
@@ -100,19 +99,6 @@ app.get("/selected_recipe/:recipeID", function(req, res) {
         _id: recipeID
     }, function(err, recipeResult) {
         if (!err) {
-
-            // recipeResult.associatedRecipes.forEach(function(recipeID){
-            //     Recipe.findOne({_id : recipeID },function (err,discoveredRecipe){
-            //         toAdd = {
-            //             name: discoveredRecipe.name,
-            //             id: recipeID
-            //         }
-            //         assRecipes.push(toAdd)
-            //     })
-            // })
-            //
-            // console.log(assRecipes);
-
             res.render("view_selected_recipe", {
                 recipe: recipeResult
             })
@@ -160,7 +146,7 @@ app.get("/view_recipes", function(req, res) {
     var alphabeticalOrder = []
     var recipes = []
     let authors = []
-    Recipe.find({}, null, {
+    Recipe.find({deleted: false}, null, {
         sort: {
             name: 1
         }
@@ -195,6 +181,7 @@ app.get('/view_selected_recipe', function(req, res) {
         }
     })
 })
+
 
 app.post("/add_questions", function(req, res) {
     var sub
@@ -245,41 +232,9 @@ app.post("/add_recipe", function(req, res) {
     let ingredient
     const ingredients = []
     const tags = []
-    const associatedRecipes = _.split(req.body.associatedRecipes, ",")
     const instructions = _.split(req.body.instructions, "\r\n")
     let x
     let errorIngredient = false
-
-
-    // below will add the ingredients to an array
-    // ingredientsPulled.forEach(function(ingredient) {
-    //     errorIngredient = false
-    //     x = ingredient.match(/([\d\/\s]+)?\s?([\w]+)\s([\w\W\s]+)?/)
-    //
-    //     if (x == null) {
-    //     } else {
-    //         for (var i = 1; i < 4; i++) {
-    //             if (x[i] == undefined) {
-    //                 errorIngredient = true
-    //             }
-    //         }
-    //         if (errorIngredient == false) {
-    //             ingredient = {
-    //                 amount: x[1],
-    //                 measurement: x[2],
-    //                 name: x[3]
-    //             }
-    //         } else {
-    //             ingredient = {
-    //                 amount: "",
-    //                 measurement: "",
-    //                 name: ingredient
-    //             }
-    //         }
-    //         ingredients.push(ingredient)
-    //     }
-    //
-    // })
 
     // below will take all of the tags from the recipe it will break up the String
     // that is returned, and the save them to the tags array.
@@ -293,7 +248,6 @@ app.post("/add_recipe", function(req, res) {
         instructions: instructions,
         tags: tags,
         url: req.body.URL,
-        associatedRecipes: associatedRecipes,
         author: _.capitalize(req.body.author)
     })
 
@@ -307,6 +261,44 @@ app.post("/select_recipe", function(req, res) {
     console.log(req.body);
 
     res.redirect("/selected_recipe/" + req.body.selectedRecipe)
+})
+
+app.post("/edit_recipe", function(req, res) {
+    let recipeID = req.body.editButton
+    Recipe.findOne({
+        _id: recipeID
+    }, function(err, recipeToEdit) {
+        if (!err) {
+            res.render("update_recipe", {
+                recipe: recipeToEdit
+            })
+        }
+    })
+})
+
+app.post("/submit_updated_recipes", function(req, res) {
+    ingredients = req.body.ingredient
+        _.split(req.body.ingredients, "\r\n").forEach(function(ing) {
+            if (ing.length > 0) {
+                ingredients.push(ing)
+            }
+        })
+
+    instructions = _.split(req.body.instructions)
+
+    Recipe.updateOne({ _id: req.body.id },{url: req.body.URL},function(err,result){})
+    Recipe.updateOne({ _id: req.body.id },{instructions: instructions},function(err,result){})
+    Recipe.updateOne({ _id: req.body.id },{ingredients: ingredients},function(err,result){})
+    Recipe.updateOne({ _id: req.body.id },{name: req.body.name},function(err,result){})
+    Recipe.updateOne({ _id: req.body.id },{author: req.body.author},function(err,result){})
+    res.redirect("/")
+})
+
+app.post("/delete_me", function(req,res) {
+    console.log(req.body);
+
+    Recipe.updateOne({_id: req.body.to_delete}, {deleted: true}, function(err,report){})
+    res.redirect("/view_recipes")
 })
 
 

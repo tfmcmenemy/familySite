@@ -11,17 +11,24 @@
 
             <h3 class="recipeSection">Ingredients:</h3>
             <% recipe.ingredients.forEach(function(selectedIngredient){ %>
-            <P><%= selectedIngredient %></P> 
-    <% }) %>
+            <P><%= selectedIngredient %></P>
+            <% }) %>
 
             <h3 class="recipeSection">Instructions:</h3>
             <% recipe.instructions.forEach(function(instruciton){%>
             <p> <%= instruciton %> </p>
             <% }) %>
         </div>
-    </div>
-    <div class="col-lg-3 col-sm-1 text-center">
 
+        <form action="/edit_recipe" method="post">
+            <div class="form-group">
+                <button type="submit" value="<%= recipe._id %>" name="editButton" class="btn btn-outline-secondary">Edit Recipe</button>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="col-lg-3 col-sm-1 text-center">
     </div>
 </div>
 

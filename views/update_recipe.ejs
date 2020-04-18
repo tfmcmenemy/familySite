@@ -1,0 +1,98 @@
+<%- include("header") -%>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-2">
+        <p> </p>
+    </div>
+    <div class="col-lg-6 col-sm-8 text-center mcm-form">
+        <h1 class="page-title"><%= recipe.name %> </h1>
+
+        <form action="/submit_updated_recipes" method="post">
+            <input hidden="true" name="id" value="<%= recipe._id %>">
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="">Recipe Name</label>
+                    <input class="form-control" type="text" name="name" value="<%= recipe.name %>" placeholder="Recipe Name" autocomplete="off">
+                </div>
+                <div class="form-row form-group">
+                    <label>Ingredients</label>
+                    <% i = 0 %>
+                    <% recipe.ingredients.forEach(function(ingredient){%>
+                    <% if (ingredient.length != 0){ %>
+                    <textarea class="form-control mcm-form" type="text" name="ingredient"><%= ingredient %></textarea>
+                    <% i ++ %>
+                    <% } %>
+                    <% }) %>
+                </div>
+                <div class="form-group">
+                    <label>Additional Ingredients</label>
+                    <textarea class="form-control" name="ingredients" rows="10"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Instructions</label>
+                    <% let instructionSTR = "" %>
+                    <% recipe.instructions.forEach(function(instruction){ %>
+                    <% instructionSTR += instruction + "\n" %>
+                    <% }) %>
+                    <textarea class="form-control" name="instructions" rows="10" value=""><%= instructionSTR %></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="">URL:</label>
+                    <input class="form-control col-12" type="text" name="URL" placeholder="Link" autocomplete="off" value="<%= recipe.url %>">
+                </div>
+                <div class="form-group">
+                    <label for="">Tags:</label>
+                    <% let tagSTR = "" %>
+                    <% if (recipe.tags.length > 0){%>
+                    <% recipe.tags.forEach(function(tag){ %>
+                    <% tagSTR += tag + ", " %>
+                    <% }) %>
+                    <% }  %>
+                    <% tagSTR = tagSTR.slice(0,-2) %>
+                    <input class="form-control col-12" type="text" name="tags" placeholder="Tags - seperate each tag by a comma and a space." autocomplete="off" value="<%= tagSTR %>">
+                </div>
+                <div class="form-group">
+                    <label for="">Author:</label>
+                    <input class="form-control col-12" type="text" name="author" placeholder="Author" autocomplete="off" value="<%= recipe.author %>">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-secondary submit-button" name="button">Update Recipe</button>
+                </div>
+        </form>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#staticBackdrop">
+            Delete this recipe
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                        <h5>Are you sure you want to delete this recipe?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">Do not delete</button>
+                        <button type="submit" class="btn btn-danger btn-sm" data-dismiss="modal" onclick="delete_recipe()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-2">
+        <form hidden="true" action="/delete_me" method="post" id="delete_form">
+            <input value="<%= recipe._id %>" name="to_delete">
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    function delete_recipe() {
+        document.getElementById("delete_form").submit()
+    }
+</script>
+
+<%- include("footer") -%>
