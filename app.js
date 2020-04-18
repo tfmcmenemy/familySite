@@ -278,21 +278,29 @@ app.post("/edit_recipe", function(req, res) {
 })
 
 app.post("/submit_updated_recipes", function(req, res) {
-    ingredients = req.body.ingredient
+    ingredients = []
+    console.log(req.body);
+    ingredientstoPush = req.body.ingredient
+
+        for(var i = 0; i < ingredientstoPush.length; i++){
+            ingredients.push(ingredientstoPush[i])
+        }
+
         _.split(req.body.ingredients, "\r\n").forEach(function(ing) {
             if (ing.length > 0) {
                 ingredients.push(ing)
             }
         })
+        console.log(ingredients);
 
-    instructions = _.split(req.body.instructions)
+    instructions = _.split(req.body.instructions, "\r\n")
 
     Recipe.updateOne({ _id: req.body.id },{url: req.body.URL},function(err,result){})
     Recipe.updateOne({ _id: req.body.id },{instructions: instructions},function(err,result){})
     Recipe.updateOne({ _id: req.body.id },{ingredients: ingredients},function(err,result){})
     Recipe.updateOne({ _id: req.body.id },{name: req.body.name},function(err,result){})
     Recipe.updateOne({ _id: req.body.id },{author: req.body.author},function(err,result){})
-    res.redirect("/")
+    res.redirect("/selected_recipe/" + req.body.id)
 })
 
 app.post("/delete_me", function(req,res) {
