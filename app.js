@@ -183,7 +183,7 @@ app.get('/view_selected_recipe', function(req, res) {
 })
 
 
-app.post("/add_questions", function(req, res) {
+app.post("/_questions", function(req, res) {
     var sub
     if (req.body.subject.length > 1) {
         sub = _.capitalize(req.body.subject)
@@ -248,7 +248,8 @@ app.post("/add_recipe", function(req, res) {
         instructions: instructions,
         tags: tags,
         url: req.body.URL,
-        author: _.capitalize(req.body.author)
+        author: _.capitalize(req.body.author),
+        deleted: false
     })
 
     recipe.save()
