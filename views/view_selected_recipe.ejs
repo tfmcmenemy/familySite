@@ -11,16 +11,16 @@
 
             <h3 class="recipeSection">Ingredients:</h3>
             <% recipe.ingredients.forEach(function(selectedIngredient){ %>
-            <P><%= selectedIngredient %></P>
+            <p onclick="checkOff(this)" data-checked="no"><%= selectedIngredient %></p>
             <% }) %>
 
             <h3 class="recipeSection">Instructions:</h3>
             <% recipe.instructions.forEach(function(instruciton){%>
-            <p> <%= instruciton %> </p>
+            <p onclick="checkOff(this)" data-checked="no"> <%= instruciton %> </p>
             <% }) %>
             <% if (recipe.url.length > 0 ){ %>
-                <h3 class="recipeSection">Link:</h3>
-                <a href="<%= recipe.url %>" target="_blank"><%= recipe.url %></a>
+            <h3 class="recipeSection">Link:</h3>
+            <a href="<%= recipe.url %>" target="_blank"><%= recipe.url %></a>
             <% } %>
 
             <h3 class="recipeSection">Recipe Entered By:</h3>
@@ -34,9 +34,24 @@
         </form>
 
     </div>
+</div>
+<div class="col-lg-3 col-sm-1 text-center">
 
-    <div class="col-lg-3 col-sm-1 text-center">
-    </div>
+</div>
 </div>
 
+
+<script type="text/javascript">
+    function checkOff(x) {
+        console.log(x);
+        if (x.getAttribute("data-checked") == "no") {
+            x.innerHTML = "<s>" + x.innerHTML + "</s>"
+            x.setAttribute("data-checked", "yes")
+        } else {
+            x.innerHTML = x.innerText
+            x.setAttribute("data-checked", "no")
+            console.log("working");
+        }
+    }
+</script>
 <%- include("footer") -%>
