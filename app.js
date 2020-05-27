@@ -397,7 +397,7 @@ app.route("/menu")
 
         function getRecipes() {
             return new Promise((resolve) => {
-                Recipe.find().sort("name").exec((err, results) => {
+                Recipe.find({category:"Dinner"}).sort("name").exec((err, results) => {
                     resolve(results)
                 })
             })
