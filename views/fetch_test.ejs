@@ -1,0 +1,79 @@
+<%- include("header") -%>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-1">
+        <p> </p>
+    </div>
+    <div class="col-lg-6 col-sm-10 text-center mcm-form">
+        <br><br>
+        <br><br><br><br><br><br><br>
+        <select id="change_select" onchange="pullRecipe(this)">
+            <% recipes.forEach(function(recipe) { %>
+            <option value="<%= recipe._id %>"><%= recipe.name %></option>
+            <%})%>
+        </select>
+        <br><br><br><br><br>
+        <div class="" id="output">
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-1">
+
+    </div>
+</div>
+
+<script>
+
+
+function pullRecipe(x){
+
+    console.log(x.value)
+
+    fetch('http://localhost:3000/api/recipes/'+ x.value).then(response => response.json()).then(data => createRecipe(data))
+
+    function createRecipe(data){
+
+
+        if (document.querySelector("#recipe")) {
+            document.querySelector("#recipe").remove()
+        }
+        let recipe = document.createElement("div")
+
+        let ingredients = document.createElement("ul")
+        data.ingredients.forEach(function(x){
+            ingredient = document.createElement("li")
+            ingredient.appendChild(document.createTextNode(x))
+            ingredients.appendChild(ingredient)
+        })
+
+        let instructions = document.createElement("ul")
+        data.instructions.forEach(function(x){
+            instruction = document.createElement("li")
+            instruction.appendChild(document.createTextNode(x))
+            instructions.appendChild(instruction)
+        })
+
+        ingredients.classList = "ingredientsAndInstructions text-left mcm-list"
+        instructions.classList = "ingredientsAndInstructions text-left mcm-list"
+
+        console.log(ingredients);
+        console.log(instructions)
+
+        recipe.appendChild(ingredients)
+        recipe.appendChild(instructions)
+        recipe.id = "recipe"
+
+        // let title = document.createElement("p")
+        // title.appendChild(document.createTextNode(data.name))
+        // title.id = "tester"
+        document.querySelector("#output").appendChild(recipe)
+
+    }
+
+
+}
+
+
+
+</script>
+
+<%- include("footer") -%>

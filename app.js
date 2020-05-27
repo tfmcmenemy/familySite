@@ -4,6 +4,8 @@ const express = require("express"); //REQUIRED - neede to use Express.js
 const bodyParser = require("body-parser"); //REQUIRED - need for returning body items
 const mongoose = require("mongoose") //REQUIRED - needed to greate mongoDB databases
 const _ = require("lodash")
+const date = require('date-and-time')
+const additionalFunctions = require(__dirname + "/additionalFunctions.js")
 
 const app = express(); //REQUIRED - declaring express as an app
 
@@ -26,11 +28,16 @@ app.use(express.static("public"));
 //     useUnifiedTopology: true
 // });
 
-mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemyFamily', {
-// mongoose.connect('mongodb://localhost:27017/recipes', {
+// mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemyFamily', {
+mongoose.connect('mongodb://localhost:27017/recipes', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+
+// mongoose.connect('mongodb://localhost:27017/meals', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// });
 
 /////Schema
 const questionSchema = new mongoose.Schema({
@@ -51,11 +58,22 @@ const recipeSchema = new mongoose.Schema({
     url: String,
     author: String,
     file: String,
-    deleted: Boolean
+    deleted: Boolean,
+    category: String
+})
+
+const mealSchema = new mongoose.Schema({
+    date: Date,
+    meal: String,
+    associateRecipe: String,
+    ingredientsPurchased: Boolean,
+    notes: String
 })
 
 const Question = mongoose.model("Question", questionSchema)
 const Recipe = mongoose.model("Recipe", recipeSchema)
+const Meal = mongoose.model("Meal", mealSchema)
+
 
 app.get("/", function(req, res) {
     console.log('Someone connected to the server');
@@ -146,7 +164,9 @@ app.get("/view_recipes", function(req, res) {
     var alphabeticalOrder = []
     var recipes = []
     let authors = []
-    Recipe.find({deleted: false}, null, {
+    Recipe.find({
+        deleted: false
+    }, null, {
         sort: {
             name: 1
         }
@@ -282,32 +302,236 @@ app.post("/submit_updated_recipes", function(req, res) {
     console.log(req.body);
     ingredientstoPush = req.body.ingredient
 
-        for(var i = 0; i < ingredientstoPush.length; i++){
-            ingredients.push(ingredientstoPush[i])
-        }
+    for (var i = 0; i < ingredientstoPush.length; i++) {
+        ingredients.push(ingredientstoPush[i])
+    }
 
-        _.split(req.body.ingredients, "\r\n").forEach(function(ing) {
-            if (ing.length > 0) {
-                ingredients.push(ing)
-            }
-        })
-        console.log(ingredients);
+    _.split(req.body.ingredients, "\r\n").forEach(function(ing) {
+        if (ing.length > 0) {
+            ingredients.push(ing)
+        }
+    })
+    console.log(ingredients);
 
     instructions = _.split(req.body.instructions, "\r\n")
 
-    Recipe.updateOne({ _id: req.body.id },{url: req.body.URL},function(err,result){})
-    Recipe.updateOne({ _id: req.body.id },{instructions: instructions},function(err,result){})
-    Recipe.updateOne({ _id: req.body.id },{ingredients: ingredients},function(err,result){})
-    Recipe.updateOne({ _id: req.body.id },{name: req.body.name},function(err,result){})
-    Recipe.updateOne({ _id: req.body.id },{author: req.body.author},function(err,result){})
+    Recipe.updateOne({
+        _id: req.body.id
+    }, {
+        url: req.body.URL
+    }, function(err, result) {})
+    Recipe.updateOne({
+        _id: req.body.id
+    }, {
+        instructions: instructions
+    }, function(err, result) {})
+    Recipe.updateOne({
+        _id: req.body.id
+    }, {
+        ingredients: ingredients
+    }, function(err, result) {})
+    Recipe.updateOne({
+        _id: req.body.id
+    }, {
+        name: req.body.name
+    }, function(err, result) {})
+    Recipe.updateOne({
+        _id: req.body.id
+    }, {
+        author: req.body.author
+    }, function(err, result) {})
     res.redirect("/selected_recipe/" + req.body.id)
 })
 
-app.post("/delete_me", function(req,res) {
+app.post("/delete_me", function(req, res) {
     console.log(req.body);
 
-    Recipe.updateOne({_id: req.body.to_delete}, {deleted: true}, function(err,report){})
+    Recipe.updateOne({
+        _id: req.body.to_delete
+    }, {
+        deleted: true
+    }, function(err, report) {})
     res.redirect("/view_recipes")
+})
+
+
+///////////////////////////
+//////     REST     ///////
+///////////////////////////
+
+app.get("/api/recipes/:id", function(req, res) {
+
+    let id = req.params.id
+
+    Recipe.findOne({
+        _id: id
+    }, function(err, result) {
+        if (!err) {
+            res.send(result)
+        } else {
+            res.send(err)
+        }
+    })
+})
+
+app.get("/fetch", function(req, res) {
+    Recipe.find({}, function(err, recipes) {
+        res.render("fetch_test", {
+            recipes: recipes
+        })
+    })
+})
+
+
+app.route("/menu")
+    .get(function(req, res) {
+
+        let d = new Date("2020-04-25")
+        console.log(`${additionalFunctions.getDayOfTheWeek(d)}   ${d}`);
+
+        function getRecipes() {
+            return new Promise((resolve) => {
+                Recipe.find().sort("name").exec((err, results) => {
+                    resolve(results)
+                })
+            })
+        }
+
+        function getMeals() {
+            return new Promise(resolve => {
+                let d = new Date()
+                d.setDate(d.getDate() - 1)
+                Meal.find({
+                    date: {
+                        $gt: d
+                    }
+                }).sort("date").exec(function(err, results) {
+                    resolve(results)
+                })
+            })
+        }
+
+        async function renderSite() {
+            let recipes = await getRecipes()
+            let meals = await getMeals()
+            res.render("menu", {
+                recipes: recipes,
+                meals: meals,
+                convertDate: additionalFunctions.convertDate,
+                getDayOfTheWeek: additionalFunctions.getDayOfTheWeek
+            })
+        }
+
+        renderSite()
+    })
+
+
+    .post(function(req, res) {
+        Meal.findOne({
+            _id: req.body.id
+        }, function(err, results) {
+            if (results) {
+                Meal.updateOne({
+                    _id: req.body.id
+                }, {
+                    date: req.body.date,
+                    meal: req.body.meal,
+                    associateRecipe: req.body.associateRecipe,
+                    ingredientsPurchased: req.body.ingredientsPurchased,
+                    notes: req.body.notes
+                }, function(err) {
+                    if (err) {
+                        console.log(err)
+                    }
+                })
+            } else {
+                newMeal = new Meal({
+                    date: req.body.date,
+                    meal: req.body.meal,
+                    associateRecipe: req.body.associateRecipe,
+                    ingredientsPurchased: req.body.ingredientsPurchased,
+                    notes: req.body.notes
+                })
+                newMeal.save()
+                res.send(newMeal._id)
+                console.log(newMeal._id);
+            }
+        })
+    })
+
+    .delete(function(req, res) {
+        Meal.deleteOne({
+            _id: req.body.id
+        }, function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(`Meal on succssfully deleted.`);
+            }
+        })
+        res.send("Deleted")
+    })
+
+app.get("/checkForDuplicates", function(req, res) {
+
+    function numberOfTimesInAnArray(value, array) {
+        let count = 0
+        array.forEach(function(itter) {
+            if (itter == value) {
+                count++
+            }
+        })
+        return count
+    }
+
+    function addToArray(array) {
+        let newArr = []
+        array.forEach(function(val) {
+            newArr.push(val.name)
+        })
+        return newArr
+    }
+
+    Recipe.find({}, function(err, results) {
+        let names = addToArray(results)
+        names.forEach(function(name) {
+            if (numberOfTimesInAnArray(name, names) > 1) {
+                console.log(name)
+            }
+        })
+    })
+})
+
+app.get("/addMeal", function(req, res) {
+    newMeal = new Meal({
+        date: "2020-05-29",
+        meal: "Tacos",
+        associateRecipe: "",
+        ingredientsPurchased: true,
+        notes: "these are some notes about the meal."
+    })
+    newMeal.save()
+})
+
+app.get("/bulk", function(req, res) {
+    let thing = function (){
+        
+    }
+    Recipe.find({}, function(err, results) {
+        res.render("bulkedit", {
+            recipes: results
+        })
+    })
+})
+
+app.post("/bulk", function(req, res) {
+    for (var key in req.body) {
+        if(key != "button"){
+            if (req.body.hasOwnProperty(key)) {
+                Recipe.updateOne({_id:key},{category:req.body[key]},function(err, results){})
+            }
+        }
+    }
 })
 
 

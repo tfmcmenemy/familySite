@@ -1,6 +1,10 @@
 body {
     background: #f4f4f4;
     font-family: 'Montserrat', sans-serif;
+    /* using the 'fixed-top' class for the navbar makes
+    all of the content hidden under it. This padding
+    will prevent that form happening. */
+    padding-top: 100px;
 }
 .dropdown_options {
     font-size: 10px;
@@ -19,7 +23,6 @@ body {
 
 .page-title {
     margin: 30px;
-    margin-top: 70px;
 }
 
 .submit-button {
@@ -80,4 +83,9 @@ body {
 
 .formOR{
     margin: 5px;
+}
+
+.mcm-list li {
+    list-style: none;
+    margin: 13px;
 }
