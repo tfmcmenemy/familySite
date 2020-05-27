@@ -28,8 +28,8 @@ app.use(express.static("public"));
 //     useUnifiedTopology: true
 // });
 
-// mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemyFamily', {
-mongoose.connect('mongodb://localhost:27017/recipes', {
+mongoose.connect('mongodb+srv://admin-tom:MOnkey@!21@mcmenemyfamily-database-ht0pj.mongodb.net/mcmenemyFamily', {
+// mongoose.connect('mongodb://localhost:27017/recipes', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -269,7 +269,8 @@ app.post("/add_recipe", function(req, res) {
         tags: tags,
         url: req.body.URL,
         author: _.capitalize(req.body.author),
-        deleted: false
+        deleted: false,
+        category: req.body.category
     })
 
     recipe.save()
@@ -339,6 +340,11 @@ app.post("/submit_updated_recipes", function(req, res) {
         _id: req.body.id
     }, {
         author: req.body.author
+    }, function(err, result) {})
+    Recipe.updateOne({
+        _id: req.body.id
+    }, {
+        category: req.body.category
     }, function(err, result) {})
     res.redirect("/selected_recipe/" + req.body.id)
 })
@@ -515,7 +521,7 @@ app.get("/addMeal", function(req, res) {
 
 app.get("/bulk", function(req, res) {
     let thing = function (){
-        
+
     }
     Recipe.find({}, function(err, results) {
         res.render("bulkedit", {

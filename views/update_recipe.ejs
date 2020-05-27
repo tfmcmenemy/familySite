@@ -53,6 +53,16 @@
                     <input class="form-control col-12" type="text" name="tags" placeholder="Tags - seperate each tag by a comma and a space." autocomplete="off" value="<%= tagSTR %>">
                 </div>
                 <div class="form-group">
+                    <label for="">Type of Recipe:</label>
+                    <select class="custom-select" name="category" id="<%=recipe.category%>">
+                        <option value="Dinner">Dinner</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Drink">Drink</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="">Author:</label>
                     <input class="form-control col-12" type="text" name="author" placeholder="Author" autocomplete="off" value="<%= recipe.author %>">
                 </div>
@@ -93,6 +103,11 @@
     function delete_recipe() {
         document.getElementById("delete_form").submit()
     }
+
+    let cats = Array.from(document.getElementsByTagName("select"))
+    cats.forEach((item)=>{
+        item.value = item.id
+    })
 </script>
 
 <%- include("footer") -%>
